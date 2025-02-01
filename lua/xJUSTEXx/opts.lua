@@ -2,12 +2,12 @@ local M = {}
 
 M.default_content = {
   project_dirs = {
-    vim.fn.expand('$HOME') .. '/Documents/Articles',
-    vim.fn.expand('$HOME') .. '/Documents/Research',
+    vim.fn.expand("$HOME") .. "/Documents/Articles",
+    vim.fn.expand("$HOME") .. "/Documents/Research",
   },
   tex_templates = {
     article = {
-      name = 'Article',
+      name = "Article",
       content = [[
 \documentclass{article}
 
@@ -29,7 +29,7 @@ This is an article template.
       ]],
     },
     book = {
-      name = 'Book',
+      name = "Book",
       content = [[
 \documentclass{book}
 
@@ -51,7 +51,7 @@ This is a book template.
       ]],
     },
     presentation = {
-      name = 'Presentation',
+      name = "Presentation",
       content = [[
 \documentclass{beamer}
 
