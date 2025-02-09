@@ -14,11 +14,10 @@ project, a main.tex and a .justfile for compile.
 ## Tabla de Contenidos
 
 - [Dependencias](#dependencias)
-- [Instalación](#instalación)
-- [Configuración](#configuración)
-- [Uso](#uso)
-- [Comandos](#comandos)
-- [Opciones de Configuración](#opciones-de-configuración)
+- [Instalación](#install)
+- [Configuración](#configuration)
+- [Uso](#use)
+- [Opciones de Configuración](#change-default-configuration)
 - [Contribuciones](#contribuciones)
 
 ## Dependencias
@@ -30,7 +29,7 @@ project, a main.tex and a .justfile for compile.
 - [texclear](https://github.com/LukeSmithxyz/voidrice/blob/master/.local/bin/texclear)
   (opcional)
 
-## Instalación / Install
+## Install
 
 Para instalar puedes usar el plugin manager que prefieras. El siguiente ejemplo
 es con [lazy.nvim](https://github.com/folke/lazy.nvim) y depende de
@@ -72,7 +71,7 @@ la compilación.
 
 ```
 
-## Configuración / Configuration
+## Configuration
 
 La configuración tiene tres opciones (definición de los directorios de los
 proyectos, plantillas o contenidos con el que se iniciará el main tex y el
@@ -180,7 +179,7 @@ cleanall:
 }
 ```
 
-## Uso / Use
+## Use
 
 ![ProJustex](assets/ProJustex.png)
 
@@ -225,7 +224,7 @@ xJUSTEXx offers three commands:
 
 - **JustexLog**: Open the logfile to visualize errors (requires pplatex).
 
-## Opciones de Configuración / Change default configuration
+## Change default configuration
 
 ![Justex](assets/Justex.png)
 
