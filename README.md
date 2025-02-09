@@ -223,7 +223,7 @@ xJUSTEXx offers three commands:
 - **JustexDoc**: Open the Package documentation under the cursor with the use
   of Texdoc.
 
-- **JustexLog**: Open the logfile to visualize errors (requires platatex).
+- **JustexLog**: Open the logfile to visualize errors (requires pplatex).
 
 ## Opciones de Configuración / Change default configuration
 
