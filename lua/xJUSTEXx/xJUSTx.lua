@@ -1,6 +1,6 @@
 local M = {}
 
-function M.just(command)
+function M.xCOMPILEx(command)
   local use_fidget = false
   local fidget
 

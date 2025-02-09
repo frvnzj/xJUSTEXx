@@ -16,13 +16,21 @@ local function complete_justex()
   return options
 end
 
-vim.api.nvim_create_user_command("ProJustex", function()
-  xJUSTEXx.xTEXx()
+vim.api.nvim_create_user_command("JustexNewProject", function()
+  xJUSTEXx.xNEW_PROJECTx()
 end, {})
 
-vim.api.nvim_create_user_command("Justex", function(opts)
-  xJUSTEXx.xJUSTEXx(opts.args)
+vim.api.nvim_create_user_command("JustexCompile", function(opts)
+  xJUSTEXx.xCOMPILEx(opts.args)
 end, {
   nargs = 1,
   complete = complete_justex,
 })
+
+vim.api.nvim_create_user_command("JustexDoc", function()
+  xJUSTEXx.xTEXDOCx()
+end, {})
+
+vim.api.nvim_create_user_command("JustexLog", function()
+  xJUSTEXx.xPPLATEXx()
+end, {})
