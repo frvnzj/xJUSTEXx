@@ -2,9 +2,14 @@
 
 ![xJAVx](assets/xJAVx.png)
 
-Hice este plugin con la idea de facilitar la creación de mis ensayos con LaTeX a través de Neovim. Mezclo la creación de proyectos (una estructura básica de workspace e inicialización de repositorio git) con el fácil acceso a los comandos de TeXlive para compilar a través Just y justfile.
+Hice este plugin con la idea de facilitar la creación de mis ensayos con LaTeX
+a través de Neovim. Mezclo la creación de proyectos (una estructura básica de
+workspace e inicialización de repositorio git) con el fácil acceso a los
+comandos de TeXlive para compilar a través Just y justfile.
 
-I made this plugin with the idea of create project articleas easy with LaTeX and Neovim. This plugin create a project directory with the name of the project, a main.tex and a .justfile for compile.
+I made this plugin with the idea of create project articleas easy with LaTeX
+and Neovim. This plugin create a project directory with the name of the
+project, a main.tex and a .justfile for compile.
 
 ## Tabla de Contenidos
 
@@ -22,35 +27,67 @@ I made this plugin with the idea of create project articleas easy with LaTeX and
 - Git
 - Just
 - fidget.nvim (opcional)
-- [texclear](https://github.com/LukeSmithxyz/voidrice/blob/master/.local/bin/texclear) (opcional)
+- [texclear](https://github.com/LukeSmithxyz/voidrice/blob/master/.local/bin/texclear)
+  (opcional)
 
 ## Instalación / Install
 
-Para instalar puedes usar el plugin manager que prefieras. El siguiente ejemplo es con [lazy.nvim](https://github.com/folke/lazy.nvim) y depende de [fidget.nvim](https://github.com/j-hui/fidget.nvim) para conocer el status de la compilación.
+Para instalar puedes usar el plugin manager que prefieras. El siguiente ejemplo
+es con [lazy.nvim](https://github.com/folke/lazy.nvim) y depende de
+[fidget.nvim](https://github.com/j-hui/fidget.nvim) para conocer el status de
+la compilación.
 
 ```lua
 {
   "frvnzj/xJUSTEXx.nvim",
   dependencies = {
-    "j-hui/fidget.nvim",
+    {
+      "j-hui/fidget.nvim",
+      opts = {},
+    },
   },
   config = function()
     require("xJUSTEXx").setup()
   end,
 }
+
+-- or if you are a noice.nvim user
+
+{
+  {
+    "frvnzj/xJUSTEXx.nvim",
+    dependencies = {
+      "j-hui/fidget.nvim",
+    },
+    config = function()
+      require("xJUSTEXx").setup()
+    end,
+  },
+  {
+    "j-hui/fidget.nvim",
+    opts = {},
+    ft = { "tex", "plaintex" },
+  },
+}
+
 ```
 
 ## Configuración / Configuration
 
-La configuración tiene tres opciones (definición de los directorios de los proyectos, plantillas o contenidos con el que se iniciará el main tex y el contenido del .justfile que declara los comandos a usar). Las opciones por default son las siguientes:
+La configuración tiene tres opciones (definición de los directorios de los
+proyectos, plantillas o contenidos con el que se iniciará el main tex y el
+contenido del .justfile que declara los comandos a usar). Las opciones por
+default son las siguientes:
 
-The configuration have three options (project directories, templates for main tex and the content of .justfile with the commands for compile). The default setup is:
+The configuration have three options (project directories, templates for main
+tex and the content of .justfile with the commands for compile). The default
+setup is:
 
 ```lua
 {
   project_dirs = {
-    vim.fn.expand('$HOME') .. '/Documents/Articles',
-    vim.fn.expand('$HOME') .. '/Documents/Research',
+    vim.fn.expand('$HOME') .. '/Documents/xJUSTEXx/Articles',
+    vim.fn.expand('$HOME') .. '/Documents/xJUSTEXx/Research',
   },
   tex_templates = {
     article = {
@@ -147,50 +184,64 @@ cleanall:
 
 ![ProJustex](assets/ProJustex.png)
 
-xJUSTEXx ofrece dos comandos: 1. crear proyecto (directorio único del proyecto, repositorio git y main file) y compilar utilizando optativamente LuaLaTeX, pdfLaTeX o XeLaTeX con la ayuda/dependencia de [Just](https://github.com/casey/just).
+xJUSTEXx ofrece tres comandos:
 
-xJUSTEXx comes with two commands: 1. command for create projects (project directory with repository git, main tex file and .justile); 2. command for compile with LuaLaTeX, pdfLaTeX or XeLaTeX with the help of [Just](https://github.com/casey/just).
+- **JustexNewProject**: crea un proyecto nuevo (directorio del proyecto,
+  repositorio Git y tex file con el nombre del proyecto).
 
-### Comandos / Commands
+- **JustexCompile**: compila utilizando optativamente LuaLaTeX, pdfLaTeX o
+  XeLaTeX (dependiendo de tu `justfile_content`) con la ayuda/dependencia de
+  [Just](https://github.com/casey/just).
 
-Para iniciar un proyecto nuevo de LaTeX usa el comando:
+  - `:JustexCompile lualatex`
+  - `:JustexCompile pdflatex`
+  - `:JustexCompile pdfxe`
+  - `:JustexCompile cleanmain`
+  - `:JustexCompile cleanall`
 
-For init a new project of LaTeX use the command:
+- **JustexDoc**: abre la documentación del package bajo el cursor con el uso de texdoc.
 
-```lua
-:ProJustex
+- **JustexLog**: abre el logfile para visualizar errores (requiere pplatex).
 
--- o
+---
 
-require("xJUSTEXx").xTEXx()
-```
+xJUSTEXx offers three commands:
 
-Para compilar el proyecto utiliza el comando:
+- **JustexNewProject**: Create a new project (Project Board, Git repository and
+  Tex File with the name of the project).
 
-For compile the main.tex use the command:
+- **JustexCompile**: Compila using optionally LuaLaTeX, pdfLaTeX or XeLaTeX
+  (depending on your `justfile_content`) with
+  [Just's](https://github.com/casey/just) help.
 
-```lua
-:Justex lualatex -- pdflatex or pdfxe
+  - `:JustexCompile lualatex`
+  - `:JustexCompile pdflatex`
+  - `:JustexCompile pdfxe`
+  - `:JustexCompile cleanmain`
+  - `:JustexCompile cleanall`
 
--- o
+- **JustexDoc**: Open the Package documentation under the cursor with the use
+  of Texdoc.
 
-require("xJUSTEXx").xJUSTEXx("lualatex")
-```
+- **JustexLog**: Open the logfile to visualize errors (requires platatex).
 
 ## Opciones de Configuración / Change default configuration
 
 ![Justex](assets/Justex.png)
 
-La configuración no se limita a las 3 opciones disponibles a modificar del plugin. Por ejemplo, la configuración de uso personal para iniciar proyectos de ensayo:
+La configuración no se limita a las 3 opciones disponibles a modificar del
+plugin. Por ejemplo, la configuración de uso personal para iniciar proyectos de
+ensayo:
 
-You can change the default configuration, for example, I set my own template and directories:
+You can change the default configuration, for example, I set my own template
+and directories:
 
 ```lua
-require("xJUSTEXx").setup {
-    tex_templates = {
-      article = {
-        name = "Article",
-        content = [[
+require("xJUSTEXx").setup({
+  tex_templates = {
+    article = {
+      name = "Article",
+      content = [[
 \documentclass[doc,12pt]{apa7}
 
 % Font option: Arial[Arial], Carlito[Carlito], Droid Serif[Droid],
@@ -200,8 +251,8 @@ require("xJUSTEXx").setup {
 \addbibresource{~/Documentos/LaTeX/refs.bib}
 
 % \hypersetup{
-% 	pdftitle={<++>},
-% 	pdfkeywords={<++>}
+%  pdftitle={<++>},
+%  pdfkeywords={<++>}
 % }
 
 
@@ -227,28 +278,27 @@ require("xJUSTEXx").setup {
 
 % ----- Bibliografía -----
 % \printbibliography
-\end{document}
-        ]],
-      },
+\end{document}]],
     },
-    project_dirs = {
-      vim.fn.expand "$HOME" .. "/Documentos/Ensayos",
-      vim.fn.expand "$HOME" .. "/Documentos/Research",
-    },
-}
+  },
+  project_dirs = {
+    vim.fn.expand("$HOME") .. "/Documentos/Ensayos",
+    "~/Documentos/Research",
+    "/home/$USER/Documentos/Presentations"
+  },
+})
 ```
 
-También puedes definir tu propia plantilla siguiendo la tabla de ```tex_templates```:
+También puedes definir tu propia plantilla siguiendo la tabla de `tex_templates`:
 
-Also you can define your own template following the table of ```tex_templates```:
+Also you can define your own template following the table of `tex_templates`:
 
 ```lua
 tex_templates = {
     myTemplate = {
         name = 'MyTemplate',
         content = [[
-This is MyTemplate
-        ]],
+This is MyTemplate]],
     },
 },
 ```
@@ -264,14 +314,23 @@ It is also recommended to use [which-key](https://github.com/folke/which-key.nvi
 ```lua
 local wk = require("which-key")
 
+wk.add({
+  { "<leader>wa", "<cmd>JustexCompile lualatex<cr>", desc = "xJAVx LuaLaTeX", icon = { icon = "", color = "azure" } },
+  { "<leader>wb", "<cmd>JustexCompile pdflatex<cr>", desc = "xJAVx LaTeX", icon = { icon = "", color = "azure" } },
+  { "<leader>wc", "<cmd>JustexCompile pdfxe<cr>", desc = "xJAVx XeLaTeX", icon = { icon = "", color = "azure" } },
+})
 
-wk.add {
-  { "<leader>wa", "<cmd>Justex lualatex<cr>", desc = "xJAVx LuaLaTeX", icon = { icon = "", color = "azure" }, },
-  { "<leader>wb", "<cmd>Justex pdflatex<cr>", desc = "xJAVx LaTeX", icon = { icon = "", color = "azure" }, },
-  { "<leader>wc", "<cmd>Justex pdfxe<cr>", desc = "xJAVx XeLaTeX", icon = { icon = "", color = "azure" }, },
-  { "<leader>wd", "<cmd>Justex cleanmain<cr>", desc = "xJAVx CleanMainAuxFiles", icon = { icon = "", color = "azure" }, },
-  { "<leader>we", "<cmd>Justex cleanall<cr>", desc = "xJAVx CleanAllFilesAux", icon = { icon = "", color = "azure" }, },
-}
+vim.keymap.set("n", "<leader>wd", function()
+  require("xJUSTEXx").xCOMPILEx("cleanmain")
+end, { noremap = true, silent = true })
+
+vim.keymap.set("n", "<leader>wl", function()
+  require("xJUSTEXx").xPPLATEXx()
+end, { noremap = true, silent = true })
+
+vim.keymap.set("n", "<leader>wT", function()
+  require("xJUSTEXx").xTEXDOCx()
+end, { noremap = true, silent = true })
 
 -- Estos keymaps permiten ir rápidamente a los sitios que quiero modificar,
 -- por ejemplo, en \authorsnames{<++>} me lleva dentro de { } borrando <++>
