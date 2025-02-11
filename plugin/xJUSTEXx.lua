@@ -34,3 +34,7 @@ end, {})
 vim.api.nvim_create_user_command("JustexLog", function()
   xJUSTEXx.xPPLATEXx()
 end, {})
+
+vim.api.nvim_create_user_command("JustexSearchRef", function()
+  xJUSTEXx.xISBNx()
+end, {})

@@ -25,9 +25,8 @@ project, a main.tex and a .justfile for compile.
 - Neovim >= 0.10
 - Git
 - Just
+- plenary.nvim
 - fidget.nvim (opcional)
-- [texclear](https://github.com/LukeSmithxyz/voidrice/blob/master/.local/bin/texclear)
-  (opcional)
 
 ## Install
 
@@ -44,6 +43,9 @@ la compilación.
       "j-hui/fidget.nvim",
       opts = {},
     },
+    {
+      "nvim-lua/plenary.nvim"
+    },
   },
   config = function()
     require("xJUSTEXx").setup()
@@ -56,7 +58,7 @@ la compilación.
   {
     "frvnzj/xJUSTEXx.nvim",
     dependencies = {
-      "j-hui/fidget.nvim",
+      "nvim-lua/plenary.nvim"
     },
     config = function()
       require("xJUSTEXx").setup()
@@ -202,6 +204,16 @@ xJUSTEXx ofrece tres comandos:
 
 - **JustexLog**: abre el logfile para visualizar errores (requiere pplatex).
 
+- **JustexSearchRef**: busca referencias con ISBN y las añade al archivo
+  refs.bib, que se creará automáticamente en el directorio raíz del proyecto, al
+  confirmar la entrada.
+
+  > [!IMPORTANT]
+  > Para buscar las referencias bibliográficas, el plugin hace uso del api de
+  > Open Library, por lo que algunas referencias pueden no ser encontradas o
+  > algunos campos pueden estar vacíos y tendrán que definirse manualmente. Por
+  > ahora sólo busca referencias de libros.
+
 ---
 
 xJUSTEXx offers three commands:
@@ -223,6 +235,16 @@ xJUSTEXx offers three commands:
   of Texdoc.
 
 - **JustexLog**: Open the logfile to visualize errors (requires pplatex).
+
+- **JustexSearchRef**: Look for references with ISBN and add them to the
+  refs.bib file, which will be automatically created in the root directory of the
+  project, confirming the entrance.
+
+  > [!IMPORTANT]
+  > To look for bibliographic references, the plugin makes use of the Open
+  > Library API, so some references may not be found or some fields may be
+  > empty and will have to be defined manually. For now it only looks for book
+  > references.
 
 ## Change default configuration
 
