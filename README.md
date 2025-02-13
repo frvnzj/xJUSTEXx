@@ -204,7 +204,7 @@ xJUSTEXx ofrece tres comandos:
 
 - **JustexLog**: abre el logfile para visualizar errores (requiere pplatex).
 
-- **JustexSearchRef**: busca referencias con ISBN y las añade al archivo
+- **JustexSearchBook**: busca referencias con ISBN y las añade al archivo
   refs.bib, que se creará automáticamente en el directorio raíz del proyecto, al
   confirmar la entrada.
 
@@ -213,6 +213,19 @@ xJUSTEXx ofrece tres comandos:
   > Open Library, por lo que algunas referencias pueden no ser encontradas o
   > algunos campos pueden estar vacíos y tendrán que definirse manualmente. Por
   > ahora sólo busca referencias de libros.
+
+- **JustexSearchJournal**: busca referencias por medio de CrossRef, tiene mayor
+  versatilidad este comando gracias a su API y por el mismo índice de revistas
+  académicas.
+
+  > [!IMPORTANT]
+  > Comienza por hacer la búsqueda de la revista académica, ya sea por palabras
+  > clave o por el ISSN; después, busca artículos por palabras clave. Del
+  > artículo seleccionado podrás agregar la referencia en formato biblatex en el
+  > archivo refs.bib (se creará automáticamente), podrás seleccionar abrir el PDF
+  > del artículo en Zathura (es el único viewer configurado por ahora) o
+  > descargar el EPUB en ~/Downloads (la accesibilidad a PDF's o EPUB's depende
+  > de la disponibilidad de las revistas).
 
 ---
 
@@ -245,6 +258,19 @@ xJUSTEXx offers three commands:
   > Library API, so some references may not be found or some fields may be
   > empty and will have to be defined manually. For now it only looks for book
   > references.
+
+- **JustexSearchJournal**: Look for references through Crossref, this command
+  has greater versatility thanks to its API and the same index of academic
+  magazines.
+
+  > [!IMPORTANT]
+  > It begins by searching the academic magazine, either by keywords or by the
+  > ISSN; Then, look for articles by keywords. From the selected article you can
+  > add the reference in the Bibliatex format in the refs.bib file (it will be
+  > created automatically), you can select to open the PDF of the article in
+  > Zathura (it is the only viewer configured for now) or download the epub in
+  > ~/Downloads (accessibility to PDF's or EPUB's depends on the availability of
+  > magazines).
 
 ## Change default configuration
 
