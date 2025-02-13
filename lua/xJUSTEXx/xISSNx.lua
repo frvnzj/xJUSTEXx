@@ -149,12 +149,16 @@ function M.xCROSSREFx()
 
     local journal_resp
     if search_type == "Keywords" then
-      local journal_search = vim.fn.input("Search journals: "):gsub("%s+", "+")
+      local journal_search = vim.fn.input("Search journals: ")
       if journal_search == "" then
         vim.notify("No journal search term provided", vim.log.levels.WARN)
         return
       end
-      journal_resp = safe_curl_get("https://api.crossref.org/journals?query=" .. journal_search)
+
+      local clean_query = remove_accents(journal_search)
+      local encode_query = clean_query:gsub("%s+", "+")
+
+      journal_resp = safe_curl_get("https://api.crossref.org/journals?query=" .. encode_query)
       if not journal_resp then
         return
       end
