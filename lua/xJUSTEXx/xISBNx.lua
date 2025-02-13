@@ -29,25 +29,21 @@ function M.xSEARCH_ISBNx()
     return
   end
 
-  local bibtex_entry = ""
-  local author, title
+  local options = {}
 
   for key, value in pairs(data) do
     local bibkey = key:gsub("ISBN:", "")
-    title = value.title or " "
+    local title = value.title or " "
     local subtitle = value.subtitle or " "
-    author = (value.authors and value.authors[1] and value.authors[1].name) or " "
+    local author = (value.authors and value.authors[1] and value.authors[1].name) or " "
     local translator = (value.authors and value.authors[2] and value.authors[2].name) or " "
     local publisher = (value.publishers and value.publishers[1] and value.publishers[1].name) or " "
-    local year = " "
-    if value.publish_date then
-      year = value.publish_date:match("(%d%d%d%d)") or " "
-    end
+    local year = (value.publish_date and value.publish_date:match("(%d%d%d%d)")) or " "
     local isbn_val = bibkey
     local pagetotal = (value.number_of_pages and tostring(value.number_of_pages)) or " "
     local address = (value.publish_places and value.publish_places[1] and value.publish_places[1].name) or " "
 
-    bibtex_entry = string.format(
+    local bibtex_entry = string.format(
       "@book{%s,\n  title        = {%s},\n  subtitle     = {%s},\n  author       = {%s},\n  translator   = {%s},\n  publisher    = {%s},\n  year         = {%s},\n  isbn         = {%s},\n  pagetotal    = {%s},\n  address      = {%s}\n}",
       bibkey,
       title,
@@ -60,62 +56,46 @@ function M.xSEARCH_ISBNx()
       pagetotal,
       address
     )
+
+    local summary = string.format("%s | %s | %s", format_isbn, author, title)
+    table.insert(options, { summary = summary, bibtex = bibtex_entry })
   end
 
-  local summary = string.format("%s | %s | %s", format_isbn, author, title)
+  local function save_and_open_bib(selected_bibtex)
+    local bib_file = vim.fn.expand("%:p:h") .. "/refs.bib"
+    local file = io.open(bib_file, "a")
+    if file then
+      file:write("\n" .. selected_bibtex .. "\n")
+      file:close()
+      vim.notify("✓ Entrada añadida a " .. bib_file, vim.log.levels.INFO)
+      vim.cmd("vsplit " .. bib_file)
+    else
+      vim.notify("Error al abrir el archivo referencias.bib", vim.log.levels.ERROR)
+    end
+  end
 
-  local metadata = {
-    bibtex = bibtex_entry,
-    isbn = format_isbn,
-    author = author,
-    title = title,
-  }
+  if #options == 1 then
+    save_and_open_bib(options[1].bibtex)
+    return
+  end
 
-  local buf = vim.api.nvim_create_buf(false, true)
-  local width = 80
-  local height = 5
-  local row = math.floor((vim.o.lines - height) / 2 - 1)
-  local col = math.floor((vim.o.columns - width) / 2)
+  local summaries = vim.tbl_map(function(opt)
+    return opt.summary
+  end, options)
 
-  vim.api.nvim_buf_set_lines(buf, 0, -1, false, { summary })
-  vim.api.nvim_set_option_value("modifiable", false, { buf = buf })
+  vim.ui.select(summaries, { prompt = "Seleccione una entrada:" }, function(choice)
+    if not choice then
+      vim.notify("Operación cancelada", vim.log.levels.WARN)
+      return
+    end
 
-  local win = vim.api.nvim_open_win(buf, true, {
-    relative = "editor",
-    width = width,
-    height = height,
-    row = row,
-    col = col,
-    style = "minimal",
-    border = "rounded",
-    title = "Resultado Open Library",
-    title_pos = "center",
-  })
-
-  vim.api.nvim_buf_set_keymap(buf, "n", "<CR>", "", {
-    callback = function()
-      local bib_file = vim.fn.expand("%:p:h") .. "/referencias.bib"
-      local file = io.open(bib_file, "a")
-      if file then
-        file:write("\n" .. metadata.bibtex .. "\n")
-        file:close()
-        vim.notify("✓ Entrada añadida a " .. bib_file, vim.log.levels.INFO)
-        vim.api.nvim_win_close(win, true)
-      else
-        vim.notify("Error al abrir el archivo referencias.bib", vim.log.levels.ERROR)
+    for _, opt in ipairs(options) do
+      if opt.summary == choice then
+        save_and_open_bib(opt.bibtex)
+        break
       end
-    end,
-    noremap = true,
-    silent = true,
-  })
-
-  vim.api.nvim_buf_set_keymap(buf, "n", "q", "", {
-    callback = function()
-      vim.api.nvim_win_close(win, true)
-    end,
-    noremap = true,
-    silent = true,
-  })
+    end
+  end)
 end
 
 return M
