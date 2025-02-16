@@ -1,5 +1,6 @@
 local M = {}
 local curl = require("plenary.curl")
+local Job = require("plenary.job")
 
 local function remove_accents(str)
   local accents = {
@@ -20,31 +21,24 @@ local function remove_accents(str)
 end
 
 local function is_valid_url(url)
-  local Job = require("plenary.job")
-
-  -- Configuración de cURL
   local curl_args = {
-    "-sSL", -- Silent, follow redirects, list-only
+    "-sSL",
     "-o",
-    "/dev/null", -- Output to null
+    "/dev/null",
     "-w",
-    "%{http_code}", -- Write HTTP status code
+    "%{http_code}",
     "--max-time",
-    "10", -- Max time for entire operation
+    "10",
     "--retry",
-    "2", -- Retry up to 2 times
+    "2",
     "--retry-max-time",
-    "30", -- Total time for all retries
+    "30",
     "--retry-delay",
-    "1", -- Wait 1s between retries
+    "1",
     url,
   }
 
-  -- Result storage
-  local result = {}
-  local errors = {}
-
-  -- Crear y configurar el job
+  local result, errors = {}, {}
   local job = Job:new({
     command = "curl",
     args = curl_args,
@@ -58,12 +52,9 @@ local function is_valid_url(url)
     end,
   })
 
-  -- Ejecutar con manejo de errores
   local success, err = pcall(function()
-    job:sync(35000) -- 35s timeout (10s * 3 intentos + margen)
+    job:sync(35000)
   end)
-
-  -- Manejo de errores
   if not success then
     vim.schedule(function()
       vim.notify("Job execution failed: " .. (err or "unknown error"), vim.log.levels.ERROR)
@@ -77,12 +68,9 @@ local function is_valid_url(url)
     end)
   end
 
-  -- Validación del resultado
   if #result > 0 then
     local status_code = tonumber(result[1])
-    if status_code and status_code >= 200 and status_code < 400 then
-      return true
-    end
+    return status_code and status_code >= 200 and status_code < 400
   end
 
   return false
@@ -157,7 +145,6 @@ function M.xCROSSREFx()
 
       local clean_query = remove_accents(journal_search)
       local encode_query = clean_query:gsub("%s+", "+")
-
       journal_resp = safe_curl_get("https://api.crossref.org/journals?query=" .. encode_query)
       if not journal_resp then
         return
