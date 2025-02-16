@@ -2,145 +2,63 @@ local M = {}
 
 local config = require("xJUSTEXx.config")
 
+--- Function to create a selection window for directories
+---@param choices string[]: List of directory choices
+---@param callback fun(choice: string) Function to call with the selected choice
 local function create_directory_selection_window(choices, callback)
-  local width = vim.api.nvim_get_option_value("columns", {})
-  local height = vim.api.nvim_get_option_value("lines", {})
-
-  local win_width = math.ceil(width * 0.4)
-  local win_height = math.max(2, #choices)
-  local row = math.ceil((height - win_height) / 2)
-  local col = math.ceil((width - win_width) / 2)
-
-  local buf = vim.api.nvim_create_buf(false, true)
-  local win = vim.api.nvim_open_win(buf, true, {
-    relative = "editor",
-    width = win_width,
-    height = win_height,
-    row = row,
-    col = col,
-    style = "minimal",
-    border = "rounded",
-    title = "Select Directory",
-    title_pos = "center",
-  })
-
-  for i, choice in ipairs(choices) do
-    vim.api.nvim_buf_set_lines(buf, i - 1, i, false, { string.format("%d: %s", i, choice) })
-  end
-
-  vim.api.nvim_set_option_value("modifiable", false, { buf = buf })
-
-  vim.api.nvim_buf_set_keymap(buf, "n", "<CR>", "", {
-    noremap = true,
-    callback = function()
-      local line = vim.fn.line(".")
-      if line >= 1 and line <= #choices then
-        vim.api.nvim_win_close(win, true)
-        callback(choices[line])
-      end
+  vim.ui.select(choices, {
+    prompt = "Select Directory:",
+    format_item = function(item)
+      return item
     end,
-  })
-
-  vim.api.nvim_buf_set_keymap(buf, "n", "<Esc>", "", {
-    noremap = true,
-    callback = function()
-      vim.api.nvim_win_close(win, true)
-    end,
-  })
-
-  return buf, win
-end
-
-local function create_article_name_prompt(_, callback)
-  local width = vim.api.nvim_get_option_value("columns", {})
-  local height = vim.api.nvim_get_option_value("lines", {})
-
-  local win_width = math.ceil(width * 0.5)
-  local win_height = 1
-  local row = math.ceil((height - win_height) / 2)
-  local col = math.ceil((width - win_width) / 2)
-
-  local buf = vim.api.nvim_create_buf(false, true)
-  local win = vim.api.nvim_open_win(buf, true, {
-    relative = "editor",
-    width = win_width,
-    height = win_height,
-    row = row,
-    col = col,
-    style = "minimal",
-    border = "rounded",
-  })
-
-  vim.api.nvim_set_option_value("buftype", "prompt", { buf = buf })
-
-  vim.fn.prompt_setprompt(buf, "Name of the project: ")
-
-  vim.cmd("startinsert!")
-
-  vim.fn.prompt_setcallback(buf, function(input)
-    vim.api.nvim_win_close(win, true)
-    vim.api.nvim_buf_delete(buf, { force = true })
-
-    callback(input)
+  }, function(choice)
+    if choice then
+      callback(choice)
+    end
   end)
-
-  return buf, win
 end
 
+--- Function to prompt the user for the project name
+---@param _ any: Unused parameter
+---@param callback fun(input: string) Function to call with the entered project name
+local function create_article_name_prompt(_, callback)
+  vim.ui.input({
+    prompt = "Name of the project: ",
+  }, function(input)
+    if input then
+      callback(input)
+    end
+  end)
+end
+
+--- Function to create a selection window for templates
+---@param templates table<string, {name: string, content: string}>: Table of templates
+---@param callback fun(template_key: string) Function to call with the selected template key
 local function create_template_selection_window(templates, callback)
   local choices = vim.tbl_keys(templates)
-  local width = vim.api.nvim_get_option_value("columns", {})
-  local height = vim.api.nvim_get_option_value("lines", {})
-
-  local win_width = math.ceil(width * 0.4)
-  local win_height = math.max(2, #choices)
-  local row = math.ceil((height - win_height) / 2)
-  local col = math.ceil((width - win_width) / 2)
-
-  local buf = vim.api.nvim_create_buf(false, true)
-  local win = vim.api.nvim_open_win(buf, true, {
-    relative = "editor",
-    width = win_width,
-    height = win_height,
-    row = row,
-    col = col,
-    style = "minimal",
-    border = "rounded",
-    title = "Select Template",
-    title_pos = "center",
-  })
-
-  for i, choice in ipairs(choices) do
-    vim.api.nvim_buf_set_lines(buf, i - 1, i, false, { string.format("%d: %s", i, templates[choice].name) })
-  end
-
-  vim.api.nvim_set_option_value("modifiable", false, { buf = buf })
-
-  vim.api.nvim_buf_set_keymap(buf, "n", "<CR>", "", {
-    noremap = true,
-    callback = function()
-      local line = vim.fn.line(".")
-      if line >= 1 and line <= #choices then
-        vim.api.nvim_win_close(win, true)
-        callback(choices[line])
-      end
+  vim.ui.select(choices, {
+    prompt = "Select Template:",
+    format_item = function(item)
+      return templates[item].name
     end,
-  })
-
-  vim.api.nvim_buf_set_keymap(buf, "n", "<Esc>", "", {
-    noremap = true,
-    callback = function()
-      vim.api.nvim_win_close(win, true)
-    end,
-  })
-
-  return buf, win
+  }, function(choice)
+    if choice then
+      callback(choice)
+    end
+  end)
 end
 
+--- Function to validate the project name
+---@param name string: Project name to validate
+---@return boolean: Boolean indicating if the project name is valid
 local function is_valid_project_name(name)
   return not name:match('[/\\:%*%?"<>|]')
 end
 
+--- Function to set up the project directory and files
+---@param project_name string: Name of the project
+---@param project_dir string: Directory where the project will be created
+---@param template_content string: Content of the template to use
 local function setup_project(project_name, project_dir, template_content)
   project_name = project_name:gsub("%s+", "_")
 
@@ -186,6 +104,7 @@ local function setup_project(project_name, project_dir, template_content)
   end
 end
 
+--- Function to create a new project
 function M.xNEW_PROJECTx()
   local project_dirs = config.options.project_dirs
   local tex_templates = config.options.tex_templates
@@ -210,6 +129,7 @@ function M.xNEW_PROJECTx()
   end
 end
 
+--- Function to open LaTeX documentation for the word under the cursor
 function M.xTEXDOCx()
   local package = vim.fn.expand("<cword>")
 
@@ -228,6 +148,7 @@ function M.xTEXDOCx()
   end
 end
 
+--- Function to run pplatex on the current file and display the log
 function M.xPPLATEXx()
   local current_file = vim.fn.expand("%")
   if current_file == "" then
