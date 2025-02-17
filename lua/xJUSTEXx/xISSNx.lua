@@ -2,6 +2,7 @@ local M = {}
 local curl = require("plenary.curl")
 local Job = require("plenary.job")
 
+-- Remove accents from a string
 local function remove_accents(str)
   local accents = {
     ["á"] = "a",
@@ -20,6 +21,7 @@ local function remove_accents(str)
   return str:gsub("[%z\1-\127\194-\244][\128-\191]*", accents)
 end
 
+-- Check if a URL is valid
 local function is_valid_url(url)
   local curl_args = {
     "-sSL",
@@ -76,6 +78,7 @@ local function is_valid_url(url)
   return false
 end
 
+-- Get the first valid URL from a list of links
 local function get_valid_url(links)
   for _, link in ipairs(links) do
     if link.URL and is_valid_url(link.URL) then
@@ -85,6 +88,7 @@ local function get_valid_url(links)
   return nil
 end
 
+-- Perform a safe cURL GET request
 local function safe_curl_get(url, options)
   options = options or {}
   local ok, resp = pcall(curl.get, url, options)
@@ -95,6 +99,7 @@ local function safe_curl_get(url, options)
   return resp
 end
 
+-- Extract ISSN from a selected journal string
 local function extract_issn(selected_journal)
   local issn = selected_journal:match("ISSN:%s*([^,]+)")
   if not issn then
@@ -104,6 +109,7 @@ local function extract_issn(selected_journal)
   return issn:gsub("print:%s*", ""):gsub("electronic:%s*", "")
 end
 
+-- Prompt the user to select an option
 local function prompt_select(options, prompt, callback)
   vim.ui.select(options, { prompt = prompt }, function(choice)
     if not choice then
@@ -114,6 +120,7 @@ local function prompt_select(options, prompt, callback)
   end)
 end
 
+-- Download a file using wget
 local function download_file(url, filepath, format)
   vim.notify("Downloading " .. format .. "...", vim.log.levels.INFO)
   vim.fn.jobstart({ "wget", "-O", filepath, url }, {
@@ -128,6 +135,7 @@ local function download_file(url, filepath, format)
   })
 end
 
+-- Main function to search for journals and articles
 function M.xCROSSREFx()
   prompt_select({ "Keywords", "ISSN" }, "Search by:", function(search_type)
     if not search_type then
