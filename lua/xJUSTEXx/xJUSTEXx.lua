@@ -55,11 +55,30 @@ local function is_valid_project_name(name)
   return not name:match('[/\\:%*%?"<>|]')
 end
 
+local function remove_accents(str)
+  local accents = {
+    ["á"] = "a",
+    ["é"] = "e",
+    ["í"] = "i",
+    ["ó"] = "o",
+    ["ú"] = "u",
+    ["Á"] = "A",
+    ["É"] = "E",
+    ["Í"] = "I",
+    ["Ó"] = "O",
+    ["Ú"] = "U",
+    ["ñ"] = "n",
+    ["Ñ"] = "N",
+  }
+  return str:gsub("[%z\1-\127\194-\244][\128-\191]*", accents)
+end
+
 --- Function to set up the project directory and files
 ---@param project_name string: Name of the project
 ---@param project_dir string: Directory where the project will be created
 ---@param template_content string: Content of the template to use
 local function setup_project(project_name, project_dir, template_content)
+  project_name = remove_accents(project_name)
   project_name = project_name:gsub("%s+", "_")
 
   if not is_valid_project_name(project_name) then
