@@ -269,7 +269,7 @@ xJUSTEXx offers seven commands:
 
 - **JustexLog**: Open the logfile to visualize errors (requires pplatex).
 
-- **JustexSearchRef**: Look for references with ISBN and add them to the
+- **JustexSearchBook**: Look for references with ISBN and add them to the
   refs.bib file, which will be automatically created in the root directory of the
   project, confirming the entrance.
 
