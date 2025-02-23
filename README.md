@@ -25,15 +25,21 @@ project, a main.tex and a .justfile for compile.
 - Neovim >= 0.10
 - Git
 - Just
+- Zathura
 - plenary.nvim
 - fidget.nvim (opcional)
 
 ## Install
 
 Para instalar puedes usar el plugin manager que prefieras. El siguiente ejemplo
-es con [lazy.nvim](https://github.com/folke/lazy.nvim) y depende de
-[fidget.nvim](https://github.com/j-hui/fidget.nvim) para conocer el status de
-la compilación.
+es con [lazy.nvim](https://github.com/folke/lazy.nvim) y depende opcionalmente
+de [fidget.nvim](https://github.com/j-hui/fidget.nvim) para conocer el status
+de la compilación. Si no se cuenta con fidget, vim.notify se usará en su lugar.
+
+To install you can use the plugin manager you prefer. The following example is
+with [lazy.nvim](https://github.com/folke/lazy.nvim) and depends optionally on
+[fidget.nvim](https://github.com/j-hui/fidget.nvim) to know the status of
+compilation. If you do not have fidget, vim.Notify will be used instead.
 
 ```lua
 {
@@ -200,6 +206,11 @@ xJUSTEXx ofrece tres comandos:
   - `:JustexCompile cleanmain`
   - `:JustexCompile cleanall`
 
+- **JustexSearchCTAN**: enlista todos los paquetes de CTAN para buscar
+  documentación. Los PDF's se abrirán en Zathura, la documentación HTMl en el
+  navegador y los archivos de texto en Neovim, estos últimos se descargarán al
+  caché, `stdpath('cache')`.
+
 - **JustexDoc**: abre la documentación del package bajo el cursor con el uso de texdoc.
 
 - **JustexLog**: abre el logfile para visualizar errores (requiere pplatex).
@@ -243,6 +254,11 @@ xJUSTEXx offers three commands:
   - `:JustexCompile pdfxe`
   - `:JustexCompile cleanmain`
   - `:JustexCompile cleanall`
+
+- **JustexSearchCTAN**: List all CTAN packages to search for documentation. The
+  PDF's will open in Zathura, the HTML documentation in the browser and the text
+  files in Neovim, the latter will be downloaded to the cache, `stdpath
+('cache')`.
 
 - **JustexDoc**: Open the Package documentation under the cursor with the use
   of Texdoc.
@@ -354,9 +370,13 @@ This is MyTemplate]],
 
 ![xJUSTEXx](assets/xJUSTEXx.png)
 
-También es recomendable el uso de [which-key](https://github.com/folke/which-key.nvim) o nvim_set_keymap() en `ftplugin/tex.lua` y `ftplugin/plaintex.lua`, por ejemplo:
+También es recomendable el uso de
+[which-key](https://github.com/folke/which-key.nvim) o nvim_set_keymap() en
+`ftplugin/tex.lua` y `ftplugin/plaintex.lua`, por ejemplo:
 
-It is also recommended to use [which-key](https://github.com/folke/which-key.nvim) or nvim_set_keymap() in `ftplugin/tex.lua` y `ftplugin/plaintex.lua`, for example:
+It is also recommended to use
+[which-key](https://github.com/folke/which-key.nvim) or nvim_set_keymap() in
+`ftplugin/tex.lua` y `ftplugin/plaintex.lua`, for example:
 
 ```lua
 local wk = require("which-key")
