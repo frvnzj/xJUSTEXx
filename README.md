@@ -1,6 +1,6 @@
 # xJUSTEXx
 
-![xJAVx](assets/xJAVx.png)
+![xJUSTEXx](assets/xJUSTEXx.png)
 
 Hice este plugin con la idea de facilitar la creación de mis ensayos con LaTeX
 a través de Neovim. Mezclo la creación de proyectos (una estructura básica de
@@ -189,9 +189,13 @@ cleanall:
 
 ## Use
 
-![ProJustex](assets/ProJustex.png)
+![JustexNewProject](assets/JustexNewProject.png)
 
-xJUSTEXx ofrece tres comandos:
+![JustexSearchCTAN](assets/JustexSearchCTAN.png)
+
+![JustexSearchJournal](assets/JustexSearchJournal.png)
+
+xJUSTEXx ofrece siete comandos:
 
 - **JustexNewProject**: crea un proyecto nuevo (directorio del proyecto,
   repositorio Git y tex file con el nombre del proyecto).
@@ -240,7 +244,7 @@ xJUSTEXx ofrece tres comandos:
 
 ---
 
-xJUSTEXx offers three commands:
+xJUSTEXx offers seven commands:
 
 - **JustexNewProject**: Create a new project (Project Board, Git repository and
   Tex File with the name of the project).
@@ -290,7 +294,7 @@ xJUSTEXx offers three commands:
 
 ## Change default configuration
 
-![Justex](assets/Justex.png)
+![xPLANTILLAx](assets/xPLANTILLAx.png)
 
 La configuración no se limita a las 3 opciones disponibles a modificar del
 plugin. Por ejemplo, la configuración de uso personal para iniciar proyectos de
@@ -368,7 +372,7 @@ This is MyTemplate]],
 
 ---
 
-![xJUSTEXx](assets/xJUSTEXx.png)
+![xJUSTx](assets/xJUSTx.png)
 
 También es recomendable el uso de
 [which-key](https://github.com/folke/which-key.nvim) o nvim_set_keymap() en
