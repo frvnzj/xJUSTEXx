@@ -42,3 +42,7 @@ end, {})
 vim.api.nvim_create_user_command("JustexSearchJournal", function()
   xJUSTEXx.xISSNx()
 end, {})
+
+vim.api.nvim_create_user_command("JustexSearchCTAN", function()
+  xJUSTEXx.xCTANx()
+end, {})
